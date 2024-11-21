@@ -1,0 +1,74 @@
+version: '3'
+
+services:
+  ms-import:
+    build:
+      context: .
+      dockerfile: ms-import/Dockerfile
+    volumes:
+      - ./ms-import:/var/www
+    ports:
+      - "9001:80"
+    networks:
+      - app-network
+    command: /var/www/docker-entrypoint.sh
+    environment:
+      - SERVICE_NAME=ms-import
+      - RABBITMQ_HOST=rabbitmq
+
+  ms-bill-generation:
+    build:
+      context: .
+      dockerfile: ms-bill-generation/Dockerfile
+    volumes:
+      - ./ms-bill-generation:/var/www
+    ports:
+      - "9002:80"
+    networks:
+      - app-network
+    command: /var/www/docker-entrypoint.sh
+    environment:
+      - SERVICE_NAME=ms-bill-generation
+      - RABBITMQ_HOST=rabbitmq
+
+  ms-notification:
+    build:
+      context: .
+      dockerfile: ms-notification/Dockerfile
+    volumes:
+      - ./ms-notification:/var/www
+    ports:
+      - "9003:80"
+    networks:
+      - app-network
+    command: /var/www/docker-entrypoint.sh
+    environment:
+      - SERVICE_NAME=ms-notification
+      - RABBITMQ_HOST=rabbitmq
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - app-network
+
+  redis:
+    image: redis:7.0
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  redis_data:
+  rabbitmq_data:
