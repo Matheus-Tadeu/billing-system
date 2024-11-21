@@ -351,6 +351,11 @@
       <excludeFolder url="file://$MODULE_DIR$/ms-notification/vendor/vlucas/phpdotenv" />
       <excludeFolder url="file://$MODULE_DIR$/ms-notification/vendor/voku/portable-ascii" />
       <excludeFolder url="file://$MODULE_DIR$/ms-notification/vendor/webmozart/assert" />
+      <excludeFolder url="file://$MODULE_DIR$/ms-import/vendor/darkaonline/l5-swagger" />
+      <excludeFolder url="file://$MODULE_DIR$/ms-import/vendor/doctrine/annotations" />
+      <excludeFolder url="file://$MODULE_DIR$/ms-import/vendor/psr/cache" />
+      <excludeFolder url="file://$MODULE_DIR$/ms-import/vendor/swagger-api/swagger-ui" />
+      <excludeFolder url="file://$MODULE_DIR$/ms-import/vendor/zircote/swagger-php" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

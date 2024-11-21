@@ -356,6 +356,11 @@
       <path value="$PROJECT_DIR$/ms-import/vendor/symfony/polyfill-php81" />
       <path value="$PROJECT_DIR$/ms-import/vendor/mongodb/mongodb" />
       <path value="$PROJECT_DIR$/ms-import/vendor/jenssegers/mongodb" />
+      <path value="$PROJECT_DIR$/ms-import/vendor/swagger-api/swagger-ui" />
+      <path value="$PROJECT_DIR$/ms-import/vendor/psr/cache" />
+      <path value="$PROJECT_DIR$/ms-import/vendor/doctrine/annotations" />
+      <path value="$PROJECT_DIR$/ms-import/vendor/darkaonline/l5-swagger" />
+      <path value="$PROJECT_DIR$/ms-import/vendor/zircote/swagger-php" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1" />

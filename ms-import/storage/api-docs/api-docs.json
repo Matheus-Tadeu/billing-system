@@ -1,0 +1,88 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "ms-import API",
+        "description": "API for importing files",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/import-file": {
+            "post": {
+                "summary": "Import a CSV file",
+                "description": "Class ImportController",
+                "operationId": "7a0007469460572de7c06d781c4a85ea",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "file": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "file_id": {
+                                                    "type": "string",
+                                                    "example": "673f4ce69ff867398807ba04"
+                                                },
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Processing in background"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Failed to process the file."
+                                        },
+                                        "details": {
+                                            "type": "string",
+                                            "example": "Error details here"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
