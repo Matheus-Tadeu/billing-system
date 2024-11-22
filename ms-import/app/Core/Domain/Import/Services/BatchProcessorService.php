@@ -2,29 +2,33 @@
 
 namespace App\Core\Domain\Import\Services;
 
-use App\Core\Domain\Import\Entities\Enums\RecordStatus;
 use App\Core\Domain\Import\Factories\Interface\PrepareUpdatedFactoryInterface;
 use App\Core\Domain\Import\Factories\Interface\RecordsValidatorFactoryInterface;
 use App\Core\Domain\Import\Repositories\RecordRepositoryInterface;
-use App\Jobs\ProcessBatchJob;
+use App\Jobs\CreateRecordsJob;
+use App\Jobs\UpdateRecordsJob;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Queue;
-use Illuminate\Support\Facades\Redis;
 
 class BatchProcessorService
 {
-    public const INITIAL_RESULTS = [
-        'toUpdate' => [],
-        'toCreate' => [],
-        'invalidRecords' => [],
-        'countErrors' => 0,
-        'countSuccess' => 0,
-    ];
-
+    /**
+     * @var RecordRepositoryInterface
+     */
     private RecordRepositoryInterface $recordRepository;
+    /**
+     * @var RecordsValidatorFactoryInterface
+     */
     private RecordsValidatorFactoryInterface $recordsValidatorFactory;
+    /**
+     * @var PrepareUpdatedFactoryInterface
+     */
     private PrepareUpdatedFactoryInterface $prepareUpdatedFactory;
 
+    /**
+     * @param RecordRepositoryInterface $recordRepository
+     * @param RecordsValidatorFactoryInterface $recordsValidatorFactory
+     * @param PrepareUpdatedFactoryInterface $prepareUpdatedFactory
+     */
     public function __construct(
         RecordRepositoryInterface $recordRepository,
         RecordsValidatorFactoryInterface $recordsValidatorFactory,
@@ -35,54 +39,76 @@ class BatchProcessorService
         $this->prepareUpdatedFactory = $prepareUpdatedFactory;
     }
 
-    public function process(array $records, string $typeFile): void
+    /**
+     * @param array $batchRecords
+     * @param string $typeFile
+     * @return array
+     */
+    public function processBatch(array $batchRecords, string $typeFile): array
     {
-        $debtIDs = array_column($records, 'debtID');
+        $debtIDs = array_column($batchRecords, 'debtID');
         $existingRecords = $this->recordRepository->findByDebtIDsNotProcessed($debtIDs);
-        Queue::push(new ProcessBatchJob($records, $typeFile, $existingRecords));
+
+        $results = $this->batchRecordValidationProcess($batchRecords, $typeFile, $existingRecords);
+
+        if (!empty($results['toUpdate'])) {
+            UpdateRecordsJob::dispatch($results['toUpdate']);
+        }
+
+        if (!empty($results['toCreate'])) {
+            CreateRecordsJob::dispatch($results['toCreate']);
+        }
+
+
+        return [
+            'successCount' => $results['countSuccess'],
+            'errorCount' => $results['countErrors'],
+            'errors' => $results['invalidRecords'],
+        ];
     }
 
-    public function processRecord(array $record, string $typeFile, array $existingRecords, array &$results): void
+    /**
+     * @param array $batchRecords
+     * @param string $typeFile
+     * @param array $existingRecords
+     * @return array
+     */
+    private function batchRecordValidationProcess(array $batchRecords, string $typeFile, array $existingRecords): array
     {
-        $validator = $this->recordsValidatorFactory->validate($record, $typeFile);
+        $results = [
+            'toUpdate' => [],
+            'toCreate' => [],
+            'invalidRecords' => [],
+            'countSuccess' => 0,
+            'countErrors' => 0,
+        ];
 
-        if (!$validator->validate($record)) {
-            Log::warning('Invalid record detected', ['record' => $record]);
-            $results['invalidRecords'][] = [
-                'record_id' => $record['debtID'],
-                'errors' => $validator->getErrorMessages(),
-            ];
+        $validator = $this->recordsValidatorFactory->create($batchRecords, $typeFile);
+        $validationResults = $validator->validateBatch($batchRecords);
+
+        foreach ($validationResults['validRecords'] as $record) {
+            $results['countSuccess']++;
+
+            if (isset($existingRecords[$record['debtID']])) {
+                $results['toUpdate'][] = $this->prepareUpdatedFactory->prepareUpdatedRecord(
+                    $existingRecords[$record['debtID']],
+                    $record,
+                    $typeFile
+                );
+            } else {
+                $results['toCreate'][] = $record;
+            }
+        }
+
+        foreach ($validationResults['invalidRecords'] as $invalidRecord) {
+            $results['invalidRecords'][] = $invalidRecord;
             $results['countErrors']++;
-            return;
         }
 
-        $results['countSuccess']++;
-
-        if (isset($existingRecords[$record['debtID']])) {
-            $results['toUpdate'][] = $this->prepareUpdatedFactory->prepareUpdatedRecord(
-                $existingRecords[$record['debtID']],
-                $record,
-                $typeFile
-            );
-        } else {
-            $results['toCreate'][] = $record;
+        if (!empty($results['invalidRecords'])) {
+            Log::warning('Invalid records detected', ['invalidRecords' => $results['invalidRecords']]);
         }
 
-        $this->updateRecords($results['toUpdate']);
-        $this->createRecords($results['toCreate']);
-    }
-
-    private function updateRecords(array $toUpdate): void
-    {
-        if (!empty($toUpdate)) {
-            $this->recordRepository->updateBatch($toUpdate);
-        }
-    }
-
-    private function createRecords(array $toCreate): void
-    {
-        if (!empty($toCreate)) {
-            $this->recordRepository->createBatch($toCreate);
-        }
+        return $results;
     }
 }

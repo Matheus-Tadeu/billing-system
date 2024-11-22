@@ -6,6 +6,7 @@ use App\Core\Domain\Import\Services\ImportService;
 use App\Http\Requests\ImportRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 
 /**
  * Class ImportController
@@ -44,12 +45,41 @@ use Illuminate\Support\Facades\Log;
  *                 @OA\Property(
  *                     property="file_id",
  *                     type="string",
- *                     example="673f4ce69ff867398807ba04"
+ *                     example="6740156e39e019e0bf08f3a2"
  *                 ),
  *                 @OA\Property(
- *                     property="message",
- *                     type="string",
- *                     example="Processing in background"
+ *                     property="success_count",
+ *                     type="integer",
+ *                     example=1100000
+ *                 ),
+ *                 @OA\Property(
+ *                     property="error_count",
+ *                     type="integer",
+ *                     example=1
+ *                 ),
+ *                 @OA\Property(
+ *                     property="errors",
+ *                     type="array",
+ *                     @OA\Items(
+ *                         type="object",
+ *                         @OA\Property(
+ *                             property="record",
+ *                             type="object",
+ *                             @OA\Property(property="fileId", type="string", example="6740096f4e3cf3ac16044e5a"),
+ *                             @OA\Property(property="name", type="string", example="Charles Aguirre"),
+ *                             @OA\Property(property="governmentId", type="string", example="1507"),
+ *                             @OA\Property(property="email", type="string", example="westjeremyexample.com"),
+ *                             @OA\Property(property="debtAmount", type="string", example="4640"),
+ *                             @OA\Property(property="debtDueDate", type="string", example="2023-04-01"),
+ *                             @OA\Property(property="debtID", type="string", example="42f374d0-3491-498c-84c7-44038b45fab8"),
+ *                             @OA\Property(property="status", type="string", example="processing")
+ *                         ),
+ *                         @OA\Property(
+ *                             property="errors",
+ *                             type="array",
+ *                             @OA\Items(type="string", example="Invalid email address.")
+ *                         )
+ *                     )
  *                 )
  *             )
  *         )
@@ -112,10 +142,13 @@ class ImportController extends Controller
                 'trace' => $e->getTraceAsString(),
             ]);
 
+//            Notification::route('slack', env('SLACK_WEBHOOK_URL'))
+//                ->notify(new ImportFailedSlackNotification($e->getMessage()));
+
             return response()->json([
                 'success' => false,
                 'error' => 'Failed to process the file.',
-                'details' => $e->getMessage(),
+                'details' => $e->getMessage()
             ], 500);
         }
     }

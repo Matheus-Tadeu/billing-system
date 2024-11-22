@@ -8,9 +8,9 @@ use Illuminate\Routing\Controller as BaseController;
 
 /**
  * @OA\Info(
- *     title="ms-import API",
- *     description="API for importing files",
- *     version="1.0.0"
+ *     title="MS Documentation",
+ *     version="1.0.0",
+ *     description="MS documentation for the Import Service"
  * )
  */
 class Controller extends BaseController

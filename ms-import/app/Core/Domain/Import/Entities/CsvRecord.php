@@ -11,7 +11,7 @@ class CsvRecord extends Record
      * @param string $name
      * @param string $governmentId
      * @param string $email
-     * @param float $debtAmount
+     * @param string $debtAmount
      * @param \DateTime $debtDueDate
      * @param string $debtID
      * @param RecordStatus $status
@@ -21,15 +21,14 @@ class CsvRecord extends Record
         string $name,
         string $governmentId,
         string $email,
-        float $debtAmount,
+        string $debtAmount,
         \DateTime $debtDueDate,
         string $debtID,
-        RecordStatus $status,
-        string $test = 'teste'
+        RecordStatus $status
     ) {
         parent::__construct(
             $fileId, $name, $governmentId, $email,
-            $debtAmount, $debtDueDate, $debtID, $status, $test
+            $debtAmount, $debtDueDate, $debtID, $status
         );
     }
 }

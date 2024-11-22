@@ -4,7 +4,9 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     zip \
     unzip \
-    libssl-dev && \
+    libssl-dev \
+    netcat-openbsd && \
+    docker-php-ext-install sockets && \
     pecl install redis mongodb && \
     docker-php-ext-enable redis mongodb
 

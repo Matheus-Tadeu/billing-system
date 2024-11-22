@@ -6,7 +6,7 @@ use App\Core\Domain\Import\Entities\Record;
 use App\Core\Domain\Import\Factories\Interface\RecordFactoryInterface;
 use App\Core\Domain\Import\Services\CsvRecordService;
 
-class RecordFactory implements RecordFactoryInterface
+class RecordFactoryImp implements RecordFactoryInterface
 {
     /**
      * @var CsvRecordService
@@ -26,12 +26,13 @@ class RecordFactory implements RecordFactoryInterface
      * @param string $fileId
      * @param string $typeFile
      * @return Record
+     * @throws \DateMalformedStringException
      */
     public function create(array $row, string $fileId, string $typeFile): Record
     {
-        dd($this->csvRecordService->create($row, $fileId));
         return match ($typeFile) {
             'csv' => $this->csvRecordService->create($row, $fileId),
+            // Implemente a leitura de outros tipos de arquivos adicionais aqui
             default => throw new \InvalidArgumentException("Unsupported file type: $typeFile"),
         };
     }

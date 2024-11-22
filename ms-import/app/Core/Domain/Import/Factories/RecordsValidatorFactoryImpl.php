@@ -7,14 +7,25 @@ use App\Core\Domain\Import\Services\RecordValidatorService;
 
 class RecordsValidatorFactoryImpl implements RecordsValidatorFactoryInterface
 {
+    /**
+     * @var RecordValidatorService
+     */
     private RecordValidatorService $recordValidator;
 
+    /**
+     * @param RecordValidatorService $recordValidator
+     */
     public function __construct(RecordValidatorService $recordValidator)
     {
         $this->recordValidator = $recordValidator;
     }
 
-    public function validate(array $record, string $typeFile): RecordValidatorService
+    /**
+     * @param array $record
+     * @param string $typeFile
+     * @return RecordValidatorService
+     */
+    public function create(array $record, string $typeFile): RecordValidatorService
     {
         return match ($typeFile) {
             'csv' => $this->recordValidator,

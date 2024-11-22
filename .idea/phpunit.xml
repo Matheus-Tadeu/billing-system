@@ -3,9 +3,9 @@
   <component name="PHPUnit">
     <option name="directories">
       <list>
-        <option value="$PROJECT_DIR$/ms-import/tests" />
         <option value="$PROJECT_DIR$/ms-notification/tests" />
         <option value="$PROJECT_DIR$/ms-bill-generation/tests" />
+        <option value="$PROJECT_DIR$/ms-import/tests" />
       </list>
     </option>
   </component>

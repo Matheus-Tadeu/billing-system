@@ -6,21 +6,55 @@ use App\Core\Domain\Import\Entities\Enums\RecordStatus;
 
 class Record
 {
+    /**
+     * @var string
+     */
     private string $fileId;
+    /**
+     * @var string
+     */
     private string $name;
+    /**
+     * @var string
+     */
     private string $governmentId;
+    /**
+     * @var string
+     */
     private string $email;
-    private float $debtAmount;
+    /**
+     * @var string
+     */
+    private string $debtAmount;
+    /**
+     * @var \DateTime
+     */
     private \DateTime $debtDueDate;
+    /**
+     * @var string
+     */
     private string $debtID;
+    /**
+     * @var RecordStatus
+     */
     private RecordStatus $status;
 
+    /**
+     * @param string $fileId
+     * @param string $name
+     * @param string $governmentId
+     * @param string $email
+     * @param string $debtAmount
+     * @param \DateTime $debtDueDate
+     * @param string $debtID
+     * @param RecordStatus $status
+     */
     public function __construct(
         string $fileId,
         string $name,
         string $governmentId,
         string $email,
-        float $debtAmount,
+        string $debtAmount,
         \DateTime $debtDueDate,
         string $debtID,
         RecordStatus $status
@@ -35,6 +69,9 @@ class Record
         $this->status = $status;
     }
 
+    /**
+     * @return array
+     */
     public function toArray(): array
     {
         return [

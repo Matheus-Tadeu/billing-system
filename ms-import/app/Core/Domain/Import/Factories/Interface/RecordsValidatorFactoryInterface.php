@@ -6,5 +6,10 @@ use App\Core\Domain\Import\Services\RecordValidatorService;
 
 interface RecordsValidatorFactoryInterface
 {
-    public function validate(array $record, string $typeFile): RecordValidatorService;
+    /**
+     * @param array $record
+     * @param string $typeFile
+     * @return RecordValidatorService
+     */
+    public function create(array $record, string $typeFile): RecordValidatorService;
 }

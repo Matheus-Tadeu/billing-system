@@ -24,7 +24,7 @@ class CsvRecordService implements CsvRecordInterface
             $row[3], // debtAmount
             new \DateTime($row[4]), // debtDueDate
             $row[5], // debtID
-            RecordStatus::PROCESSING
+            RecordStatus::PROCESSING,
         );
     }
 }

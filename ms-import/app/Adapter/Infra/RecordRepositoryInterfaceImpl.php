@@ -34,21 +34,19 @@ class RecordRepositoryInterfaceImpl implements RecordRepositoryInterface
 
     public function updateBatch(array $records): void
     {
-        if (!empty($records)) {
-            $bulkOperations = [];
+        $bulkOperations = [];
 
-            foreach ($records as $record) {
-                $bulkOperations[] = [
-                    'updateOne' => [
-                        ['debtID' => $record['debtID']], // Filter
-                        ['$set' => $record],             // Updates
-                    ],
-                ];
-            }
-
-            $this->model->getConnection()
-                ->getCollection($this->model->getTable())
-                ->bulkWrite($bulkOperations);
+        foreach ($records as $record) {
+            $bulkOperations[] = [
+                'updateOne' => [
+                    ['debtID' => $record['debtID']],
+                    ['$set' => $record],
+                ],
+            ];
         }
+
+        $this->model->getConnection()
+            ->getCollection($this->model->getTable())
+            ->bulkWrite($bulkOperations, ['ordered' => false]);
     }
 }
