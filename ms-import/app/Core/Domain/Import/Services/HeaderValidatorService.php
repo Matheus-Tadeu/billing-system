@@ -5,7 +5,7 @@ namespace App\Core\Domain\Import\Services;
 use App\Core\Domain\Import\Services\Interfaces\HeaderValidatorInterface;
 use Exception;
 
-class RecordHeaderValidatorService implements HeaderValidatorInterface
+class HeaderValidatorService implements HeaderValidatorInterface
 {
     /**
      * @var array|string[]

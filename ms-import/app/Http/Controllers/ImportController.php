@@ -99,27 +99,17 @@ class ImportController extends Controller
      */
     public function __invoke(ImportRequest $request): JsonResponse
     {
-        $traceId = $request->header('X-Trace-ID');
-        $file = $request->file('file');
-
-        Log::info('Received import request', [
-            'trace_id' => $traceId,
-            'filename' => $file->getClientOriginalName(),
-            'size' => $file->getSize(),
-        ]);
-
         try {
-            $result = $this->importService->process($file);
+            $file = $request->file('file');
+            $result = $this->importService->processFile($file);
+            return response()->json(['success' => true ,'data' => $result]);
 
-            return response()->json([
-                ['success' => true ,'data' => $result],
-            ], 200);
         } catch (\Throwable $e) {
             Log::error('Import failed', [
-                'trace_id' => $traceId,
                 'error' => $e->getMessage(),
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
             ]);
 
             return response()->json([

@@ -12,5 +12,10 @@ interface FileRepositoryInterface
      */
     public function create(string $path):  string;
 
+    /**
+     * @param string $fileId
+     * @param FileStatus $status
+     * @return void
+     */
     public function updateStatus(string $fileId, FileStatus $status): void;
 }

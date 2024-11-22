@@ -11,16 +11,20 @@ class FileRepositoryInterfaceImpl implements FileRepositoryInterface
     /**
      * @var File
      */
-    private File $model;
+    private File $fileModel;
 
     public function __construct()
     {
-        $this->model = app(File::class);
+        $this->fileModel = app(File::class);
     }
 
+    /**
+     * @param string $path
+     * @return string
+     */
     public function create(string $path): string
     {
-       $file = $this->model->create([
+       $file = $this->fileModel->create([
             'path' => $path,
             'status' => FileStatus::PROCESSING,
         ]);
@@ -29,9 +33,14 @@ class FileRepositoryInterfaceImpl implements FileRepositoryInterface
     }
 
 
+    /**
+     * @param string $fileId
+     * @param FileStatus $status
+     * @return void
+     */
     public function updateStatus(string $fileId, FileStatus $status): void
     {
-        $this->model->where('id', $fileId)->update([
+        $this->fileModel->where('id', $fileId)->update([
             'status' => $status,
         ]);
     }

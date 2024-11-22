@@ -4,8 +4,8 @@ namespace App\Core\Domain\Import\Services\Interfaces;
 
 use Illuminate\Http\UploadedFile;
 
-interface FileReaderServiceInterface
+interface FileReaderService
 {
     public function extractHeader(UploadedFile $file): array;
-    public function processInBatches(UploadedFile $file, \Closure $callback): void;
+    public function generateBatches(UploadedFile $file, \Closure $callback): void;
 }

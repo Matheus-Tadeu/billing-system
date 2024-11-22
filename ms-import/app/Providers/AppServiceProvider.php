@@ -5,6 +5,8 @@ namespace App\Providers;
 use App\Adapter\Infra\FileRepositoryInterfaceImpl;
 use App\Adapter\Infra\RecordRepositoryInterfaceImpl;
 use App\Core\Domain\Import\Factories\BatchProcessorFactory;
+use App\Core\Domain\Import\Factories\RecordFactory;
+use App\Core\Domain\Import\Factories\Interface\RecordFactoryInterface;
 use App\Core\Domain\Import\Factories\Interface\PrepareUpdatedFactoryInterface;
 use App\Core\Domain\Import\Factories\Interface\ProcessInBatchesFactoryInterface;
 use App\Core\Domain\Import\Factories\Interface\RecordHeaderValidatorFactoryInterface;
@@ -30,8 +32,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(RecordRepositoryInterface::class, RecordRepositoryInterfaceImpl::class);
         $this->app->bind(RecordsValidatorFactoryInterface::class, RecordsValidatorFactoryImpl::class);
         $this->app->bind(PrepareUpdatedFactoryInterface::class, PrepareUpdatedFactoryImpl::class);
+        $this->app->bind(RecordFactory::class, RecordFactoryInterface::class);
+        $this->app->bind(RecordFactoryInterface::class, RecordFactory::class);
 
-        $this->app->singleton(BatchProcessorFactory::class, function ($app) {
+        $this->app->bind(BatchProcessorFactory::class, function ($app) {
             return new BatchProcessorFactory(
                 $app->make(RecordRepositoryInterface::class),
                 $app->make(RecordsValidatorFactoryInterface::class),
