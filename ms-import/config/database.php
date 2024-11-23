@@ -97,6 +97,9 @@ return [
             'driver' => 'mongodb',
             'dsn' => env('MONGO_URI', ''),
             'database' => env('MONGO_DATABASE', 'myappdb'),
+            'options' => [
+                'database' => env('MONGO_DB_AUTHENTICATION_DATABASE', 'admin'),
+            ],
         ],
     ],
 

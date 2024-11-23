@@ -12,4 +12,6 @@ chmod 777 .env
 
 php artisan key:generate
 
+service supervisor start
+
 php artisan serve --host=0.0.0.0 --port=80

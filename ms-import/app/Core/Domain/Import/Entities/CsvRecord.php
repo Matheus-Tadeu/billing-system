@@ -2,7 +2,7 @@
 
 namespace App\Core\Domain\Import\Entities;
 
-use App\Core\Domain\Import\Entities\Enums\RecordStatus;
+use App\Core\Domain\Import\Entities\Enums\Status;
 
 class CsvRecord extends Record
 {
@@ -14,7 +14,7 @@ class CsvRecord extends Record
      * @param string $debtAmount
      * @param \DateTime $debtDueDate
      * @param string $debtID
-     * @param RecordStatus $status
+     * @param Status $status
      */
     public function __construct(
         string $fileId,
@@ -24,7 +24,7 @@ class CsvRecord extends Record
         string $debtAmount,
         \DateTime $debtDueDate,
         string $debtID,
-        RecordStatus $status
+        Status $status
     ) {
         parent::__construct(
             $fileId, $name, $governmentId, $email,

@@ -2,7 +2,7 @@
 
 namespace App\Core\Domain\Import\Entities;
 
-use App\Core\Domain\Import\Entities\Enums\RecordStatus;
+use App\Core\Domain\Import\Entities\Enums\Status;
 
 class Record
 {
@@ -35,9 +35,9 @@ class Record
      */
     private string $debtID;
     /**
-     * @var RecordStatus
+     * @var Status
      */
-    private RecordStatus $status;
+    private Status $status;
 
     /**
      * @param string $fileId
@@ -47,7 +47,7 @@ class Record
      * @param string $debtAmount
      * @param \DateTime $debtDueDate
      * @param string $debtID
-     * @param RecordStatus $status
+     * @param Status $status
      */
     public function __construct(
         string $fileId,
@@ -57,7 +57,7 @@ class Record
         string $debtAmount,
         \DateTime $debtDueDate,
         string $debtID,
-        RecordStatus $status
+        Status $status
     ) {
         $this->fileId = $fileId;
         $this->name = $name;

@@ -42,6 +42,20 @@ return [
             'after_commit' => false,
         ],
 
+        'update_records' => [
+            'driver' => 'database',
+            'table' => 'jobs',
+            'queue' => 'update_records',
+            'retry_after' => 90,
+        ],
+
+        'create_records' => [
+            'driver' => 'database',
+            'table' => 'jobs',
+            'queue' => 'create_records',
+            'retry_after' => 90,
+        ],
+
         'beanstalkd' => [
             'driver' => 'beanstalkd',
             'host' => 'localhost',
@@ -77,6 +91,16 @@ return [
             'timeout' => 60,
             'max_jobs' => 1000,
             'max_time' => 3600,
+        ],
+
+        'rabbitmq' => [
+            'driver' => 'rabbitmq',
+            'host' => env('RABBITMQ_HOST', '127.0.0.1'),
+            'port' => env('RABBITMQ_PORT', 5672),
+            'user' => env('RABBITMQ_USERNAME', 'guest'),
+            'password' => env('RABBITMQ_PASSWORD', 'guest'),
+            'vhost' => env('RABBITMQ_VHOST', '/'),
+            'queue' => env('RABBITMQ_QUEUE', 'default'),
         ],
     ],
 

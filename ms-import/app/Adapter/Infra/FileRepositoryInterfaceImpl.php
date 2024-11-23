@@ -2,7 +2,7 @@
 
 namespace App\Adapter\Infra;
 
-use App\Core\Domain\Import\Entities\Enums\FileStatus;
+use App\Core\Domain\Import\Entities\Enums\Status;
 use App\Core\Domain\Import\Repositories\FileRepositoryInterface;
 use App\Models\File;
 
@@ -26,7 +26,7 @@ class FileRepositoryInterfaceImpl implements FileRepositoryInterface
     {
        $file = $this->fileModel->create([
             'path' => $path,
-            'status' => FileStatus::PROCESSING,
+            'status' => Status::PROCESSING,
         ]);
 
         return $file->id;
@@ -35,10 +35,10 @@ class FileRepositoryInterfaceImpl implements FileRepositoryInterface
 
     /**
      * @param string $fileId
-     * @param FileStatus $status
+     * @param Status $status
      * @return void
      */
-    public function updateStatus(string $fileId, FileStatus $status): void
+    public function updateStatus(string $fileId, Status $status): void
     {
         $this->fileModel->where('id', $fileId)->update([
             'status' => $status,

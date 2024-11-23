@@ -13,7 +13,8 @@
         "laravel/sanctum": "^3.3",
         "laravel/slack-notification-channel": "^3.4",
         "laravel/tinker": "^2.8",
-        "vladimir-yuldashev/laravel-queue-rabbitmq": "^14.1"
+        "vladimir-yuldashev/laravel-queue-rabbitmq": "^14.1",
+        "ext-mongodb": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

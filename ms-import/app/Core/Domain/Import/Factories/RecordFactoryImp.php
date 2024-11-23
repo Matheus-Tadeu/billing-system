@@ -26,7 +26,6 @@ class RecordFactoryImp implements RecordFactoryInterface
      * @param string $fileId
      * @param string $typeFile
      * @return Record
-     * @throws \DateMalformedStringException
      */
     public function create(array $row, string $fileId, string $typeFile): Record
     {

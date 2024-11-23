@@ -2,15 +2,16 @@
 
 namespace App\Models;
 
+use MongoDB\BSON\ObjectId;
 use MongoDB\Laravel\Eloquent\Model;
-use App\Core\Domain\Import\Entities\Enums\RecordStatus;
+use App\Core\Domain\Import\Entities\Enums\Status;
 
 class Record extends Model
 {
     /**
      * @var string
      */
-    protected $collection = 'records';
+    protected string $collection = 'records';
     /**
      * @var string
      */
@@ -40,6 +41,16 @@ class Record extends Model
      * @var string[]
      */
     protected $casts = [
-        'status' => RecordStatus::class,
+        'status' => Status::class
     ];
+
+    /**
+     * @param $id
+     * @return ObjectId
+     */
+    public function getObjectId($id)
+    {
+        return new ObjectId($id);
+    }
+
 }

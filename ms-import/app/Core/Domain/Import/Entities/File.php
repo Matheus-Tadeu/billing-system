@@ -2,7 +2,7 @@
 
 namespace App\Core\Domain\Import\Entities;
 
-use App\Core\Domain\Import\Entities\Enums\FileStatus;
+use App\Core\Domain\Import\Entities\Enums\Status;
 
 class File
 {
@@ -17,9 +17,9 @@ class File
     public string $path;
 
     /**
-     * @var FileStatus
+     * @var Status
      */
-    public FileStatus $status;
+    public Status $status;
 
     /**
      * @var string|null

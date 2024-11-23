@@ -2,7 +2,7 @@
 
 namespace App\Adapter\Infra;
 
-use App\Core\Domain\Import\Entities\Enums\RecordStatus;
+use App\Core\Domain\Import\Entities\Enums\Status;
 use App\Core\Domain\Import\Repositories\RecordRepositoryInterface;
 use App\Models\Record;
 
@@ -18,35 +18,52 @@ class RecordRepositoryInterfaceImpl implements RecordRepositoryInterface
         $this->model = app(Record::class);
     }
 
+    /**
+     * @param array $debtIDs
+     * @return array
+     */
     public function findByDebtIDsNotProcessed(array $debtIDs): array
     {
         return $this->model->whereIn('debtID', $debtIDs)
-            ->where('status', '!=', RecordStatus::PROCESSED)
+            ->whereNotIn('status', [Status::CONCLUDED])
             ->get()
             ->keyBy('debtID')
             ->toArray();
     }
 
-    public function createBatch(array $records): void
+    /**
+     * @param array $records
+     * @return void
+     */
+    public function create(array $records): void
     {
-        $this->model->insert($records);
+        $this->model->getConnection()
+            ->getCollection($this->model->getTable())
+            ->insertMany($records);
     }
 
-    public function updateBatch(array $records): void
+    /**
+     * @param array $records
+     * @return void
+     */
+    public function update(array $records): void
     {
-        $bulkOperations = [];
+        $bulk = [];
 
         foreach ($records as $record) {
-            $bulkOperations[] = [
+            $filter = ['_id' => $this->model->getObjectId($record['id'])];
+            unset($record['id']);
+            $update = ['$set' => $record];
+            $bulk[] = [
                 'updateOne' => [
-                    ['debtID' => $record['debtID']],
-                    ['$set' => $record],
-                ],
+                    $filter,
+                    $update
+                ]
             ];
         }
 
         $this->model->getConnection()
             ->getCollection($this->model->getTable())
-            ->bulkWrite($bulkOperations, ['ordered' => false]);
+            ->bulkWrite($bulk);
     }
 }

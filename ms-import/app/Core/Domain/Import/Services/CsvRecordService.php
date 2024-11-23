@@ -3,7 +3,7 @@
 namespace App\Core\Domain\Import\Services;
 
 use App\Core\Domain\Import\Entities\CsvRecord;
-use App\Core\Domain\Import\Entities\Enums\RecordStatus;
+use App\Core\Domain\Import\Entities\Enums\Status;
 use App\Core\Domain\Import\Services\Interfaces\CsvRecordInterface;
 
 class CsvRecordService implements CsvRecordInterface
@@ -24,7 +24,7 @@ class CsvRecordService implements CsvRecordInterface
             $row[3], // debtAmount
             new \DateTime($row[4]), // debtDueDate
             $row[5], // debtID
-            RecordStatus::PROCESSING,
+            Status::INITIALIZED,
         );
     }
 }

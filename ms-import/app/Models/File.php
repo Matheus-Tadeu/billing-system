@@ -3,14 +3,14 @@
 namespace App\Models;
 
 use MongoDB\Laravel\Eloquent\Model;
-use App\Core\Domain\Import\Entities\Enums\FileStatus;
+use App\Core\Domain\Import\Entities\Enums\Status;
 
 class File extends Model
 {
     /**
      * @var string
      */
-    protected $collection = 'files';
+    protected string $collection = 'files';
     /**
      * @var string
      */
@@ -34,6 +34,6 @@ class File extends Model
      * @var string[]
      */
     protected $casts = [
-        'status' => FileStatus::class,
+        'status' => Status::class,
     ];
 }

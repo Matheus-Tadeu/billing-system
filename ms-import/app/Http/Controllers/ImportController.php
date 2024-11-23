@@ -6,7 +6,6 @@ use App\Core\Domain\Import\Services\ImportService;
 use App\Http\Requests\ImportRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Notification;
 
 /**
  * Class ImportController
@@ -130,8 +129,13 @@ class ImportController extends Controller
     public function __invoke(ImportRequest $request): JsonResponse
     {
         try {
+            Log::info('Iniciando importação', ['file' => $request->file('file')->getClientOriginalName()]);
+
             $file = $request->file('file');
             $result = $this->importService->processFile($file);
+
+            Log::info('Importação realizada', ['file' => $request->file('file')->getClientOriginalName()]);
+
             return response()->json(['success' => true ,'data' => $result]);
 
         } catch (\Throwable $e) {

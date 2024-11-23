@@ -2,8 +2,7 @@
 
 namespace App\Core\Domain\Import\Services;
 
-use App\Core\Domain\Import\Entities\Enums\FileStatus;
-use App\Core\Domain\Import\Entities\Enums\RecordStatus;
+use App\Core\Domain\Import\Entities\Enums\Status;
 use App\Core\Domain\Import\Services\Interfaces\PrepareUpdatedInterface;
 
 class CsvPrepareUpdatedService implements PrepareUpdatedInterface
@@ -16,6 +15,8 @@ class CsvPrepareUpdatedService implements PrepareUpdatedInterface
             'email' => $newRecord['email'],
             'debtAmount' => $newRecord['debtAmount'],
             'debtDueDate' => $newRecord['debtDueDate'],
+            'status' => Status::PROCESSING,
+            'updated_at' => now()->toIso8601String(),
         ]);
     }
 }

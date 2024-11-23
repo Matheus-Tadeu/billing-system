@@ -23,7 +23,7 @@ class RecordValidatorService
 
     /**
      * @param array $records
-     * @return array
+     * @return array ['validRecords' => [], 'invalidRecords' => [], 'countValid' => 0, 'countInvalid' => 0]
      */
     public function validateBatch(array $records): array
     {

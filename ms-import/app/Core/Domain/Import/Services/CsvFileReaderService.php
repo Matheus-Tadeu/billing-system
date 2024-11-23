@@ -45,7 +45,7 @@ class CsvFileReaderService implements FileReaderService
 
         while (($row = fgetcsv($fileHandle)) !== false) {
             $batch[] = $row;
-            if (count($batch) >= env('BATCH_SIZE_PROCESS', 50000)) {
+            if (count($batch) >= env('CSV_BATCH_SIZE_PROCESS', 50000)) {
                 $callback($batch);
                 $batch = [];
             }

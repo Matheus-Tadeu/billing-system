@@ -14,6 +14,21 @@ use Illuminate\Support\Facades\Log;
 class ImportService
 {
     /**
+     * @var int
+     */
+    private int $successCount = 0;
+
+    /**
+     * @var int
+     */
+    private int $errorCount = 0;
+
+    /**
+     * @var array
+     */
+    private array $errors = [];
+
+    /**
      * @var RecordHeaderValidatorFactoryInterface
      */
     private RecordHeaderValidatorFactoryInterface $recordHeaderValidatorFactory;
@@ -73,13 +88,15 @@ class ImportService
      */
     public function processFile(UploadedFile $file): array
     {
-        Log::info('Starting file processing', ['file_name' => $file->getClientOriginalName()]);
+        Log::info('Validando arquivo', ['file_name' => $file->getClientOriginalName()]);
+
         $header = $this->processInBatchesFactory->extractHeader($file);
         $typeFile = $file->getClientOriginalExtension();
         $this->recordHeaderValidatorFactory->validate($header, $typeFile);
 
         $fileId = $this->fileRepository->create($file);
-        Log::info('File created in repository', ['file_id' => $fileId]);
+
+        Log::info('Arquivo salvo', ['file_id' => $fileId]);
 
         $batchProcessor = $this->batchProcessorFactory->create();
 
@@ -95,7 +112,7 @@ class ImportService
             &$errorCount,
             &$errors
         ) {
-            Log::info('Processing batch', ['batch_size' => count($batch)]);
+            Log::info('Processando Lote', ['batch_size' => count($batch)]);
             $batchRecords = array_map(
                 fn($row) => $this->recordFactory->create($row, $fileId, $typeFile)->toArray(),
                 $batch
@@ -108,17 +125,21 @@ class ImportService
             $errors = array_merge($errors, $result['errors']);
         });
 
+        $result = [
+            'file_id' => $fileId,
+            'success_count' => $successCount,
+            'error_count' => $errorCount,
+            'errors' => $errors,
+        ];
+
+        Log::info('Processamento finalizado', $result);
+
         $this->fileStatusUpdaterService->updateStatus($fileId, [
             'success' => $successCount,
             'invalid' => $errorCount,
         ]);
 
-        Log::info('File processed', [
-            'file_id' => $fileId,
-            'success_count' => $successCount,
-            'error_count' => $errorCount,
-            'errors' => $errors,
-        ]);
+        Log::info('Status do arquivo atualizado', ['file_id' => $fileId]);
 
         return [
             'file_id' => $fileId,

@@ -53,8 +53,12 @@ services:
       - "15672:15672"
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
+      - type: bind
+        source: ./rabbitmq-setup.sh
+        target: /usr/local/bin/rabbitmq-setup.sh
     networks:
       - app-network
+    command: /bin/bash -c "rabbitmq-server & sleep 10 && /usr/local/bin/rabbitmq-setup.sh && tail -f /dev/null"
 
   redis:
     image: redis:7.0

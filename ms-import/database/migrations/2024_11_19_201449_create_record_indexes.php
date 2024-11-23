@@ -12,7 +12,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::connection('mongodb')->table('records', function (Blueprint $collection) {
-            $collection->index(['file_id' => 1, 'status' => 1]);
             $collection->index('file_id');
             $collection->index('status');
             $collection->index('governmentId');
@@ -20,6 +19,7 @@ return new class extends Migration
             $collection->index('debtID');
             $collection->index('created_at');
             $collection->index('updated_at');
+            $collection->timestamps();
         });
     }
 
@@ -29,7 +29,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::connection('mongodb')->table('records', function (Blueprint $collection) {
-            $collection->dropIndex(['file_id', 'status']);
             $collection->dropIndex(['file_id']);
             $collection->dropIndex(['status']);
             $collection->dropIndex(['governmentId']);
@@ -37,6 +36,7 @@ return new class extends Migration
             $collection->dropIndex(['debtID']);
             $collection->dropIndex(['created_at']);
             $collection->dropIndex(['updated_at']);
+            $collection->dropTimestamps();
         });
     }
 };
