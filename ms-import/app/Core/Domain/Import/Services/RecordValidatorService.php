@@ -13,9 +13,6 @@ class RecordValidatorService
      */
     private array $requiredFields;
 
-    /**
-     *
-     */
     public function __construct()
     {
         $this->requiredFields = ['name', 'governmentId', 'debtAmount', 'debtDueDate', 'email', 'debtID'];
@@ -58,9 +55,7 @@ class RecordValidatorService
     {
         $this->errorMessages = [];
 
-        if (!$this->hasRequiredFields($record)) {
-            return false;
-        }
+      $this->hasRequiredFields($record);
 
         if (!is_numeric($record['debtAmount']) || $record['debtAmount'] <= 0) {
             $this->errorMessages[] = "Invalid debt amount.";
@@ -87,16 +82,14 @@ class RecordValidatorService
 
     /**
      * @param array $record
-     * @return bool
+     * @return void
      */
-    private function hasRequiredFields(array $record): bool
+    private function hasRequiredFields(array $record): void
     {
         foreach ($this->requiredFields as $field) {
             if (empty($record[$field])) {
                 $this->errorMessages[] = "The field {$field} is required.";
-                return false;
             }
         }
-        return true;
     }
 }

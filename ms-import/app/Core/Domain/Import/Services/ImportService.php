@@ -2,7 +2,7 @@
 
 namespace App\Core\Domain\Import\Services;
 
-use App\Core\Domain\Import\Factories\BatchProcessorFactory;
+use App\Core\Domain\Import\Factories\BatchFactory;
 use App\Core\Domain\Import\Factories\Interface\RecordFactoryInterface;
 use App\Core\Domain\Import\Factories\Interface\ProcessInBatchesFactoryInterface;
 use App\Core\Domain\Import\Factories\Interface\RecordHeaderValidatorFactoryInterface;
@@ -28,9 +28,9 @@ class ImportService
     private FileRepositoryInterface $fileRepository;
 
     /**
-     * @var BatchProcessorFactory
+     * @var BatchFactory
      */
-    private BatchProcessorFactory $batchProcessorFactory;
+    private BatchFactory $batchProcessorFactory;
 
     /**
      * @var RecordFactoryInterface
@@ -46,7 +46,7 @@ class ImportService
      * @param RecordHeaderValidatorFactoryInterface $recordHeaderValidatorFactory
      * @param ProcessInBatchesFactoryInterface $processInBatchesFactory
      * @param FileRepositoryInterface $fileRepository
-     * @param BatchProcessorFactory $batchProcessorFactory
+     * @param BatchFactory $batchProcessorFactory
      * @param RecordFactoryInterface $recordFactory
      * @param FileStatusUpdaterService $fileStatusUpdaterService
      */
@@ -54,7 +54,7 @@ class ImportService
         RecordHeaderValidatorFactoryInterface $recordHeaderValidatorFactory,
         ProcessInBatchesFactoryInterface $processInBatchesFactory,
         FileRepositoryInterface $fileRepository,
-        BatchProcessorFactory $batchProcessorFactory,
+        BatchFactory $batchProcessorFactory,
         RecordFactoryInterface $recordFactory,
         FileStatusUpdaterService $fileStatusUpdaterService
     ) {
@@ -74,14 +74,61 @@ class ImportService
     {
         Log::info('Validando arquivo', ['file_name' => $file->getClientOriginalName()]);
 
-        $header = $this->processInBatchesFactory->extractHeader($file);
+        $header = $this->extractHeader($file);
         $typeFile = $file->getClientOriginalExtension();
-        $this->recordHeaderValidatorFactory->validate($header, $typeFile);
+        $this->validateHeader($header, $typeFile);
 
-        $fileId = $this->fileRepository->create($file);
+        $fileId = $this->saveFile($file);
 
         Log::info('Arquivo salvo', ['file_id' => $fileId]);
 
+        $result = $this->processBatches($file, $typeFile, $fileId);
+
+        Log::info('Processamento finalizado', $result);
+
+        $this->updateFileStatus($fileId, $result);
+
+        Log::info('Status do arquivo atualizado', ['file_id' => $fileId]);
+
+        return $result;
+    }
+
+    /**
+     * @param UploadedFile $file
+     * @return array
+     */
+    private function extractHeader(UploadedFile $file): array
+    {
+        return $this->processInBatchesFactory->extractHeader($file);
+    }
+
+    /**
+     * @param array $header
+     * @param string $typeFile
+     * @return void
+     */
+    private function validateHeader(array $header, string $typeFile): void
+    {
+        $this->recordHeaderValidatorFactory->validate($header, $typeFile);
+    }
+
+    /**
+     * @param UploadedFile $file
+     * @return string
+     */
+    private function saveFile(UploadedFile $file): string
+    {
+        return $this->fileRepository->create($file);
+    }
+
+    /**
+     * @param UploadedFile $file
+     * @param string $typeFile
+     * @param string $fileId
+     * @return array
+     */
+    private function processBatches(UploadedFile $file, string $typeFile, string $fileId): array
+    {
         $batchProcessor = $this->batchProcessorFactory->create();
 
         $successCount = 0;
@@ -103,7 +150,7 @@ class ImportService
                 $batch
             );
 
-            $result = $batchProcessor->processBatch($batchRecords, $typeFile, $batchNumber);
+            $result = $batchProcessor->execute($batchRecords, $typeFile, $batchNumber);
 
             $successCount += $result['successCount'];
             $errorCount += $result['errorCount'];
@@ -111,22 +158,24 @@ class ImportService
             $batchNumber++;
         });
 
-        $result = [
+        return [
             'file_id' => $fileId,
             'success_count' => $successCount,
             'error_count' => $errorCount,
             'errors' => $errors,
         ];
+    }
 
-        Log::info('Processamento finalizado', $result);
-
+    /**
+     * @param string $fileId
+     * @param array $result
+     * @return void
+     */
+    private function updateFileStatus(string $fileId, array $result): void
+    {
         $this->fileStatusUpdaterService->updateStatus($fileId, [
-            'success' => $successCount,
-            'invalid' => $errorCount,
+            'success' => $result['success_count'],
+            'invalid' => $result['error_count'],
         ]);
-
-        Log::info('Status do arquivo atualizado', ['file_id' => $fileId]);
-
-        return $result;
     }
 }

@@ -6,16 +6,16 @@ use App\Core\Domain\Import\Entities\Enums\Status;
 use App\Core\Domain\Import\Repositories\RecordRepositoryInterface;
 use App\Models\Record;
 
-class RecordRepositoryInterfaceImpl implements RecordRepositoryInterface
+class RecordRepositoryImpl implements RecordRepositoryInterface
 {
     /**
      * @var Record
      */
-    private Record $model;
+    public Record $recordModel;
 
     public function __construct()
     {
-        $this->model = app(Record::class);
+        $this->recordModel = app(Record::class);
     }
 
     /**
@@ -24,7 +24,7 @@ class RecordRepositoryInterfaceImpl implements RecordRepositoryInterface
      */
     public function findByDebtIDsNotProcessed(array $debtIDs): array
     {
-        return $this->model->whereIn('debtID', $debtIDs)
+        return $this->recordModel->whereIn('debtID', $debtIDs)
             ->whereNotIn('status', [Status::CONCLUDED])
             ->get()
             ->keyBy('debtID')
@@ -37,8 +37,8 @@ class RecordRepositoryInterfaceImpl implements RecordRepositoryInterface
      */
     public function create(array $records): void
     {
-        $this->model->getConnection()
-            ->getCollection($this->model->getTable())
+        $this->recordModel->getConnection()
+            ->getCollection($this->recordModel->getTable())
             ->insertMany($records);
     }
 
@@ -51,7 +51,7 @@ class RecordRepositoryInterfaceImpl implements RecordRepositoryInterface
         $bulk = [];
 
         foreach ($records as $record) {
-            $filter = ['_id' => $this->model->getObjectId($record['id'])];
+            $filter = ['_id' => $this->recordModel->getObjectId($record['id'])];
             unset($record['id']);
             $update = ['$set' => $record];
             $bulk[] = [
@@ -62,8 +62,8 @@ class RecordRepositoryInterfaceImpl implements RecordRepositoryInterface
             ];
         }
 
-        $this->model->getConnection()
-            ->getCollection($this->model->getTable())
+        $this->recordModel->getConnection()
+            ->getCollection($this->recordModel->getTable())
             ->bulkWrite($bulk);
     }
 }

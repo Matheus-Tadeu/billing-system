@@ -9,42 +9,42 @@ class Record
     /**
      * @var string
      */
-    private string $fileId;
+    public string $fileId;
     /**
      * @var string
      */
-    private string $name;
+    public string $name;
     /**
      * @var string
      */
-    private string $governmentId;
+    public string $governmentId;
     /**
      * @var string
      */
-    private string $email;
+    public string $email;
     /**
      * @var string
      */
-    private string $debtAmount;
+    public float $debtAmount;
     /**
      * @var \DateTime
      */
-    private \DateTime $debtDueDate;
+    public \DateTime $debtDueDate;
     /**
      * @var string
      */
-    private string $debtID;
+    public string $debtID;
     /**
      * @var Status
      */
-    private Status $status;
+    public Status $status;
 
     /**
      * @param string $fileId
      * @param string $name
      * @param string $governmentId
      * @param string $email
-     * @param string $debtAmount
+     * @param float $debtAmount
      * @param \DateTime $debtDueDate
      * @param string $debtID
      * @param Status $status
@@ -54,7 +54,7 @@ class Record
         string $name,
         string $governmentId,
         string $email,
-        string $debtAmount,
+        float $debtAmount,
         \DateTime $debtDueDate,
         string $debtID,
         Status $status

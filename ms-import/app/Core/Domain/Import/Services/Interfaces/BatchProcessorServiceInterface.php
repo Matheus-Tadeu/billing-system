@@ -10,5 +10,5 @@ interface BatchProcessorServiceInterface
      * @param int $batchNumber
      * @return array
      */
-    public function processBatch(array $batchRecords, string $typeFile, int $batchNumber): array;
+    public function execute(array $batchRecords, string $typeFile, int $batchNumber): array;
 }

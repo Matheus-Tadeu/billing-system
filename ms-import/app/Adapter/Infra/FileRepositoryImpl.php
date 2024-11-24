@@ -6,12 +6,12 @@ use App\Core\Domain\Import\Entities\Enums\Status;
 use App\Core\Domain\Import\Repositories\FileRepositoryInterface;
 use App\Models\File;
 
-class FileRepositoryInterfaceImpl implements FileRepositoryInterface
+class FileRepositoryImpl implements FileRepositoryInterface
 {
     /**
      * @var File
      */
-    private File $fileModel;
+    public File $fileModel;
 
     public function __construct()
     {

@@ -21,7 +21,7 @@ class CsvRecordService implements CsvRecordInterface
             $row[0], // name
             $row[1], // governmentId
             $row[2], // email
-            $row[3], // debtAmount
+            (float) $row[3], // debtAmount
             new \DateTime($row[4]), // debtDueDate
             $row[5], // debtID
             Status::INITIALIZED,

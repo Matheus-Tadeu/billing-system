@@ -11,7 +11,7 @@ class CsvRecord extends Record
      * @param string $name
      * @param string $governmentId
      * @param string $email
-     * @param string $debtAmount
+     * @param float $debtAmount
      * @param \DateTime $debtDueDate
      * @param string $debtID
      * @param Status $status
@@ -21,7 +21,7 @@ class CsvRecord extends Record
         string $name,
         string $governmentId,
         string $email,
-        string $debtAmount,
+        float $debtAmount,
         \DateTime $debtDueDate,
         string $debtID,
         Status $status
