@@ -10,24 +10,8 @@ use App\Core\Domain\Import\Repositories\FileRepositoryInterface;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
 
-
 class ImportService
 {
-    /**
-     * @var int
-     */
-    private int $successCount = 0;
-
-    /**
-     * @var int
-     */
-    private int $errorCount = 0;
-
-    /**
-     * @var array
-     */
-    private array $errors = [];
-
     /**
      * @var RecordHeaderValidatorFactoryInterface
      */
@@ -103,6 +87,7 @@ class ImportService
         $successCount = 0;
         $errorCount = 0;
         $errors = [];
+        $batchNumber = 1;
 
         $this->processInBatchesFactory->generateBatches($file, function (array $batch) use (
             $typeFile,
@@ -110,19 +95,20 @@ class ImportService
             $batchProcessor,
             &$successCount,
             &$errorCount,
-            &$errors
+            &$errors,
+            &$batchNumber
         ) {
-            Log::info('Processando Lote', ['batch_size' => count($batch)]);
             $batchRecords = array_map(
                 fn($row) => $this->recordFactory->create($row, $fileId, $typeFile)->toArray(),
                 $batch
             );
 
-            $result = $batchProcessor->processBatch($batchRecords, $typeFile);
+            $result = $batchProcessor->processBatch($batchRecords, $typeFile, $batchNumber);
 
             $successCount += $result['successCount'];
             $errorCount += $result['errorCount'];
             $errors = array_merge($errors, $result['errors']);
+            $batchNumber++;
         });
 
         $result = [
@@ -141,11 +127,6 @@ class ImportService
 
         Log::info('Status do arquivo atualizado', ['file_id' => $fileId]);
 
-        return [
-            'file_id' => $fileId,
-            'success_count' => $successCount,
-            'error_count' => $errorCount,
-            'errors' => $errors,
-        ];
+        return $result;
     }
 }

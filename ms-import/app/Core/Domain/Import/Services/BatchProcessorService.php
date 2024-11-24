@@ -6,12 +6,12 @@ use App\Core\Domain\Import\Entities\Enums\Status;
 use App\Core\Domain\Import\Factories\Interface\PrepareUpdatedFactoryInterface;
 use App\Core\Domain\Import\Factories\Interface\RecordsValidatorFactoryInterface;
 use App\Core\Domain\Import\Repositories\RecordRepositoryInterface;
+use App\Core\Domain\Import\Services\Interfaces\BatchProcessorServiceInterface;
 use App\Jobs\CreateRecordJob;
 use App\Jobs\UpdateRecordJob;
 use Illuminate\Support\Facades\Log;
-use MongoDB\BSON\ObjectId;
 
-class BatchProcessorService
+class BatchProcessorService implements BatchProcessorServiceInterface
 {
     /**
      * @var RecordRepositoryInterface
@@ -25,6 +25,14 @@ class BatchProcessorService
      * @var PrepareUpdatedFactoryInterface
      */
     private PrepareUpdatedFactoryInterface $prepareUpdatedFactory;
+    /**
+     * @var bool|mixed
+     */
+    private bool $async;
+    /**
+     * @var int|mixed
+     */
+    private int $subBatchSize;
 
     /**
      * @param RecordRepositoryInterface $recordRepository
@@ -39,31 +47,28 @@ class BatchProcessorService
         $this->recordRepository = $recordRepository;
         $this->recordsValidatorFactory = $recordsValidatorFactory;
         $this->prepareUpdatedFactory = $prepareUpdatedFactory;
+        $this->async = env('PROCESS_SYNC', false);
+        $this->subBatchSize = env('SUB_BATCH_SIZE', 1000);
     }
 
     /**
      * @param array $batchRecords
      * @param string $typeFile
+     * @param int $batchNumber
      * @return array
      */
-    public function processBatch(array $batchRecords, string $typeFile): array
+    public function processBatch(array $batchRecords, string $typeFile, int $batchNumber): array
     {
-        $async = env('PROCESS_SYNC');
+        Log::info('Processando lote', ['batch_number' => $batchNumber]);
+
         $debtIDs = array_column($batchRecords, 'debtID');
         $existingRecords = $this->recordRepository->findByDebtIDsNotProcessed($debtIDs);
         $results = $this->batchRecordValidationProcess($batchRecords, $typeFile, $existingRecords);
 
-        if (!empty($results['toUpdate'])) {
-            $async
-                ? $this->recordRepository->update($results['toUpdate'])
-                : UpdateRecordJob::dispatch($results['toUpdate']);
-        }
+        $this->processChunks($results['toUpdate'], $batchNumber, 'update');
+        $this->processChunks($results['toCreate'], $batchNumber, 'create');
 
-        if (!empty($results['toCreate'])) {
-            $async
-                ? $this->recordRepository->create($results['toCreate'])
-                : CreateRecordJob::dispatch($results['toCreate']);
-        }
+        Log::info('Pecessamento do lote completo', ['batch_number' => $batchNumber]);
 
         return [
             'successCount' => $results['countSuccess'],
@@ -107,7 +112,6 @@ class BatchProcessorService
     private function processValidRecords(array $validRecords, array $existingRecords, array &$results, string $typeFile): void
     {
         foreach ($validRecords as $record) {
-
             $results['countSuccess']++;
 
             if (isset($existingRecords[$record['debtID']])) {
@@ -118,12 +122,13 @@ class BatchProcessorService
                 );
 
                 $results['toUpdate'][] = $updatedRecord;
-            } else {
-                $record['status'] = Status::PROCESSING->value;
-                $record['created_at'] = now()->toIso8601String();
-                $record['updated_at'] = now()->toIso8601String();
-                $results['toCreate'][] = $record;
+                continue;
             }
+
+            $record['status'] = Status::PROCESSING->value;
+            $record['created_at'] = now()->toIso8601String();
+            $record['updated_at'] = now()->toIso8601String();
+            $results['toCreate'][] = $record;
         }
     }
 
@@ -140,7 +145,36 @@ class BatchProcessorService
         }
 
         if (!empty($results['invalidRecords'])) {
-            Log::warning('Registros inválidos detectados', ['invalidRecords' => $results['invalidRecords']]);
+            Log::warning('Invalid records detected', ['invalidRecords' => $results['invalidRecords']]);
         }
+    }
+
+    /**
+     * @param array $records
+     * @param int $batchNumber
+     * @param string $action
+     * @return void
+     */
+    private function processChunks(array $records, int $batchNumber, string $action): void
+    {
+
+        if (empty($records)) {
+            return;
+        }
+
+        $chunks = array_chunk($records, $this->subBatchSize);
+        foreach ($chunks as $chunk) {
+            if ($this->async) {
+                $this->recordRepository->$action($chunk);
+                continue;
+            }
+
+            $jobClass = $action === 'update' ? UpdateRecordJob::class : CreateRecordJob::class;
+            $jobClass::dispatch($chunk, $batchNumber);
+
+            $batchNumber++;
+        }
+
+        return;
     }
 }

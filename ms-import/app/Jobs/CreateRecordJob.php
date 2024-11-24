@@ -20,13 +20,20 @@ class CreateRecordJob implements ShouldQueue
     protected array $batchRecords;
 
     /**
+     * @var int
+     */
+    protected int $batchNumber;
+
+    /**
      * Create a new job instance.
      *
      * @param array $batchRecords
+     * @param int $batchNumber
      */
-    public function __construct(array $batchRecords)
+    public function __construct(array $batchRecords, int $batchNumber)
     {
         $this->batchRecords = $batchRecords;
+        $this->batchNumber = $batchNumber;
         $this->queue = env('RABBITMQ_QUEUE_BATCH_CREATE', 'batch_create');
     }
 
@@ -39,15 +46,15 @@ class CreateRecordJob implements ShouldQueue
     public function handle(RecordRepositoryInterface $recordRepository): void
     {
         try {
-            Log::info('CreateRecordJob: Criando registros');
+            Log::info('CreateRecordJob: Criando registros do lote', ['batch_number' => $this->batchNumber]);
             $recordRepository->create($this->batchRecords);
-            Log::info('CreateRecordJob: Registros criados');
+            Log::info('CreateRecordJob: Registros do lote criados', ['batch_number' => $this->batchNumber]);
         } catch (\Exception $e) {
-            Log::error('Erro na criação dos registros ' . json_encode([
+            Log::error('Erro na criação dos registros do lote ' . json_encode([
                     'message' => $e->getMessage(),
                     'line' => $e->getLine(),
                     'file' => $e->getFile()
-                ]));
+                ]), ['batch_number' => $this->batchNumber]);
         }
     }
 }

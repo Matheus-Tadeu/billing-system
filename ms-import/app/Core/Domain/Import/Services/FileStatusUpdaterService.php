@@ -29,10 +29,14 @@ class FileStatusUpdaterService
     {
         if ($result['success'] > 0 && $result['invalid'] === 0) {
             $this->fileRepository->updateStatus($fileId, Status::CONCLUDED);
-        } elseif ($result['success'] > 0 && $result['invalid'] > 0) {
-            $this->fileRepository->updateStatus($fileId, Status::PARTIALLY_COMPLETED);
-        } else {
-            $this->fileRepository->updateStatus($fileId, Status::FAILED);
+            return;
         }
+
+        if ($result['success'] > 0 && $result['invalid'] > 0) {
+            $this->fileRepository->updateStatus($fileId, Status::PARTIALLY_COMPLETED);
+            return;
+        }
+
+        $this->fileRepository->updateStatus($fileId, Status::FAILED);
     }
 }
