@@ -78,7 +78,8 @@ services:
         target: /usr/local/bin/rabbitmq-setup.sh
     networks:
       - app-network
-    command: /bin/bash -c "rabbitmq-server & sleep 10 && /usr/local/bin/rabbitmq-setup.sh && tail -f /dev/null"
+    command: /bin/bash -c "rabbitmq-server & sleep 15 && /usr/local/bin/rabbitmq-setup.sh && tail -f /dev/null"
+    restart: always
 
 networks:
   app-network:
