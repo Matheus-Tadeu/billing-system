@@ -14,6 +14,7 @@
       <sourceFolder url="file://$MODULE_DIR$/ms-notification/database/factories" isTestSource="false" packagePrefix="Database\Factories\" />
       <sourceFolder url="file://$MODULE_DIR$/ms-notification/database/seeders" isTestSource="false" packagePrefix="Database\Seeders\" />
       <sourceFolder url="file://$MODULE_DIR$/ms-notification/tests" isTestSource="true" packagePrefix="Tests\" />
+      <sourceFolder url="file://$MODULE_DIR$/ms-notification/tests" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/ms-bill-generation/vendor/brick/math" />
       <excludeFolder url="file://$MODULE_DIR$/ms-bill-generation/vendor/carbonphp/carbon-doctrine-types" />
       <excludeFolder url="file://$MODULE_DIR$/ms-bill-generation/vendor/composer" />
@@ -369,6 +370,24 @@
       <excludeFolder url="file://$MODULE_DIR$/ms-import/vendor/php-http/httplug" />
       <excludeFolder url="file://$MODULE_DIR$/ms-import/vendor/php-http/promise" />
       <excludeFolder url="file://$MODULE_DIR$/ms-import/vendor/symfony/polyfill-php82" />
+      <excludeFolder url="file://$MODULE_DIR$/ms-bill-generation/vendor/darkaonline/l5-swagger" />
+      <excludeFolder url="file://$MODULE_DIR$/ms-bill-generation/vendor/doctrine/annotations" />
+      <excludeFolder url="file://$MODULE_DIR$/ms-bill-generation/vendor/elastic/transport" />
+      <excludeFolder url="file://$MODULE_DIR$/ms-bill-generation/vendor/elasticsearch/elasticsearch" />
+      <excludeFolder url="file://$MODULE_DIR$/ms-bill-generation/vendor/open-telemetry/api" />
+      <excludeFolder url="file://$MODULE_DIR$/ms-bill-generation/vendor/open-telemetry/context" />
+      <excludeFolder url="file://$MODULE_DIR$/ms-bill-generation/vendor/paragonie/constant_time_encoding" />
+      <excludeFolder url="file://$MODULE_DIR$/ms-bill-generation/vendor/paragonie/random_compat" />
+      <excludeFolder url="file://$MODULE_DIR$/ms-bill-generation/vendor/php-amqplib/php-amqplib" />
+      <excludeFolder url="file://$MODULE_DIR$/ms-bill-generation/vendor/php-http/discovery" />
+      <excludeFolder url="file://$MODULE_DIR$/ms-bill-generation/vendor/php-http/httplug" />
+      <excludeFolder url="file://$MODULE_DIR$/ms-bill-generation/vendor/php-http/promise" />
+      <excludeFolder url="file://$MODULE_DIR$/ms-bill-generation/vendor/phpseclib/phpseclib" />
+      <excludeFolder url="file://$MODULE_DIR$/ms-bill-generation/vendor/psr/cache" />
+      <excludeFolder url="file://$MODULE_DIR$/ms-bill-generation/vendor/swagger-api/swagger-ui" />
+      <excludeFolder url="file://$MODULE_DIR$/ms-bill-generation/vendor/symfony/polyfill-php82" />
+      <excludeFolder url="file://$MODULE_DIR$/ms-bill-generation/vendor/vladimir-yuldashev/laravel-queue-rabbitmq" />
+      <excludeFolder url="file://$MODULE_DIR$/ms-bill-generation/vendor/zircote/swagger-php" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
