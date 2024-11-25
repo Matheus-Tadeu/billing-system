@@ -98,7 +98,7 @@ class ProcessRecordJob implements ShouldQueue
 
             $messageBody = json_encode($batchRecords);
             $message = new AMQPMessage($messageBody, ['content_type' => 'application/json']);
-            $channel->basic_publish($message, 'create_payment', 'batch.save');
+            $channel->basic_publish($message, 'create_payment', 'batch.create_payment');
 
             Log::info('Mensagem publicada no RabbitMQ', ['batch_number' => $this->batchNumber]);
 

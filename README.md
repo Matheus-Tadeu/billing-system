@@ -59,11 +59,11 @@ docker exec -it billing-system_ms-import_1 bash -c "php artisan l5-swagger:gener
 
 ## Como executar o processamento de arquivos CSV
 ```bash
-docker exec -it billing-system_ms-import_1 bash -c "php artisan queue:work --queue=process_batch_records --daemon --sleep=3"
+  docker exec -it billing-system_ms-import_1 bash -c "php artisan queue:work --queue=process_batch_records --daemon --sleep=3"
 ```
 
 ## Como acompanhar os logs do processamento
-- Acesse o diretório ms-import/storage/logs/
+- Acesse o diretório ms-import/storage/logs/ (Em breve logs no Kibana)
 
 ## Como rodar os testes
 ```bash
@@ -84,19 +84,14 @@ Acesse a interface do RabbitMQ através da seguinte URL: [Link para a interface d
 
 # MS-BILL-GENERATION
 
-## Como acessar a documentação da API
-
-Acesse a documentação da API através da seguinte URL: [Link para a documentação da API](http://localhost:9002/api/documentation)
-
-Para atualizar a documentação da API, execute o seguinte comando:
-```bash
-docker exec -it billing-system_ms-bill-generation_1 bash -c "php artisan l5-swagger:generate"
-```
-
 ## Como acompanhar os logs do processamento
-- Acesse o diretório ms-import/storage/logs/
+- Acesse o diretório ms-import/storage/logs/ (Em breve logs no Kibana)
 
-## Como rodar os testes
+## Como criar boletos
 ```bash
-docker exec -it billing-system_ms-bill-generation_1 bash -c "php artisan test"
+docker exec -it billing-system_ms-bill-generation_1 bash -c "php artisan rabbitmq:consume"
+```
+ou
+```bash
+docker exec -it billing-system_ms-bill-generation_1 bash -c "php artisan rabbitmq:consume {numero de lotes}"
 ```

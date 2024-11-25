@@ -4,8 +4,8 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     zip \
     unzip && \
-    pecl install redis  && \
-    docker-php-ext-enable redis
+    docker-php-ext-install sockets && \
+    docker-php-ext-install bcmath
 
 WORKDIR /var/www
 
