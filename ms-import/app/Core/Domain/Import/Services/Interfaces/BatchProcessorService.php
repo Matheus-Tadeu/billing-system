@@ -3,8 +3,7 @@
 namespace App\Core\Domain\Import\Services\Interfaces;
 
 use App\Core\Domain\Import\Repositories\RecordRepositoryInterface;
-use App\Jobs\CreateRecordJob;
-use App\Jobs\UpdateRecordJob;
+use App\Jobs\SaveRecordJob;
 
 class BatchProcessorService
 {
@@ -31,8 +30,7 @@ class BatchProcessorService
                 continue;
             }
 
-            $jobClass = $action === 'update' ? UpdateRecordJob::class : CreateRecordJob::class;
-            $jobClass::dispatch($chunk, $batchNumber);
+            SaveRecordJob::dispatch($chunk, $batchNumber, $action);
             $batchNumber++;
         }
 

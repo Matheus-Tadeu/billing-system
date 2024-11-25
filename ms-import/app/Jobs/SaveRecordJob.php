@@ -10,7 +10,7 @@ use Illuminate\Queue\SerializesModels;
 use App\Core\Domain\Import\Repositories\RecordRepositoryInterface;
 use Illuminate\Support\Facades\Log;
 
-class CreateRecordJob implements ShouldQueue
+class SaveRecordJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -25,16 +25,23 @@ class CreateRecordJob implements ShouldQueue
     protected int $batchNumber;
 
     /**
+     * @var string
+     */
+    protected string $action;
+
+    /**
      * Create a new job instance.
      *
      * @param array $batchRecords
      * @param int $batchNumber
+     * @param string $action
      */
-    public function __construct(array $batchRecords, int $batchNumber)
+    public function __construct(array $batchRecords, int $batchNumber, string $action)
     {
         $this->batchRecords = $batchRecords;
         $this->batchNumber = $batchNumber;
-        $this->queue = env('RABBITMQ_QUEUE_BATCH_CREATE', 'batch_create');
+        $this->action = $action;
+        $this->queue = env('RABBITMQ_QUEUE_BATCH_SAVE', 'batch_save');
     }
 
     /**
@@ -46,11 +53,16 @@ class CreateRecordJob implements ShouldQueue
     public function handle(RecordRepositoryInterface $recordRepository): void
     {
         try {
-            Log::info('CreateRecordJob: Criando registros do lote', ['batch_number' => $this->batchNumber]);
-            $recordRepository->create($this->batchRecords);
-            Log::info('CreateRecordJob: Registros do lote criados', ['batch_number' => $this->batchNumber]);
+            $logMessage = $this->action === 'update' ? 'UpdateRecordJob: Atualizando registros do lote' : 'SaveRecordJob: Criando registros do lote';
+            $logMessageDone = $this->action === 'update' ? 'UpdateRecordJob: Registros do lote atualizados' : 'SaveRecordJob: Registros do lote criados';
+            $repositoryMethod = $this->action === 'update' ? 'update' : 'create';
+
+            Log::info($logMessage, ['batch_number' => $this->batchNumber]);
+            $recordRepository->$repositoryMethod($this->batchRecords);
+            Log::info($logMessageDone, ['batch_number' => $this->batchNumber]);
+
         } catch (\Exception $e) {
-            Log::error('Erro na criação dos registros do lote ' . json_encode([
+            Log::error('Erro ao realizar ' . $this->action . ' dos registros do lote ' . json_encode([
                     'message' => $e->getMessage(),
                     'line' => $e->getLine(),
                     'file' => $e->getFile()

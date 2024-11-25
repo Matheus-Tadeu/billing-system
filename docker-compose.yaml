@@ -1,12 +1,47 @@
 version: '3'
 
 services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+    ports:
+      - "9200:9200"
+    networks:
+      - app-network
+    restart: always
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.10.1
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    networks:
+      - app-network
+    restart: always
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.10.1
+    volumes:
+      - ./logstash/pipeline:/usr/share/logstash/pipeline
+      - logs-volume:/var/www/storage/logs
+    ports:
+      - "5044:5044"
+    networks:
+      - app-network
+    depends_on:
+      - elasticsearch
+    restart: always
+
   ms-import:
     build:
       context: .
       dockerfile: ms-import/Dockerfile
     volumes:
       - ./ms-import:/var/www
+      - logs-volume:/var/www/storage/logs
     ports:
       - "9001:80"
     networks:
@@ -31,21 +66,6 @@ services:
       - SERVICE_NAME=ms-bill-generation
       - RABBITMQ_HOST=rabbitmq
 
-  ms-notification:
-    build:
-      context: .
-      dockerfile: ms-notification/Dockerfile
-    volumes:
-      - ./ms-notification:/var/www
-    ports:
-      - "9003:80"
-    networks:
-      - app-network
-    command: /var/www/docker-entrypoint.sh
-    environment:
-      - SERVICE_NAME=ms-notification
-      - RABBITMQ_HOST=rabbitmq
-
   rabbitmq:
     image: rabbitmq:3-management
     ports:
@@ -60,19 +80,10 @@ services:
       - app-network
     command: /bin/bash -c "rabbitmq-server & sleep 10 && /usr/local/bin/rabbitmq-setup.sh && tail -f /dev/null"
 
-  redis:
-    image: redis:7.0
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-    networks:
-      - app-network
-
 networks:
   app-network:
     driver: bridge
 
 volumes:
-  redis_data:
   rabbitmq_data:
+  logs-volume:

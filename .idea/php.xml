@@ -367,6 +367,14 @@
       <path value="$PROJECT_DIR$/ms-import/vendor/vladimir-yuldashev/laravel-queue-rabbitmq" />
       <path value="$PROJECT_DIR$/ms-import/vendor/phpseclib/phpseclib" />
       <path value="$PROJECT_DIR$/ms-import/vendor/php-amqplib/php-amqplib" />
+      <path value="$PROJECT_DIR$/ms-import/vendor/symfony/polyfill-php82" />
+      <path value="$PROJECT_DIR$/ms-import/vendor/elasticsearch/elasticsearch" />
+      <path value="$PROJECT_DIR$/ms-import/vendor/php-http/httplug" />
+      <path value="$PROJECT_DIR$/ms-import/vendor/php-http/discovery" />
+      <path value="$PROJECT_DIR$/ms-import/vendor/php-http/promise" />
+      <path value="$PROJECT_DIR$/ms-import/vendor/elastic/transport" />
+      <path value="$PROJECT_DIR$/ms-import/vendor/open-telemetry/api" />
+      <path value="$PROJECT_DIR$/ms-import/vendor/open-telemetry/context" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1" />

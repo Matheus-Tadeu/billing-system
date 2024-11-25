@@ -2,15 +2,12 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class ImportControllerTest extends TestCase
 {
-    use RefreshDatabase;
-
     public function testImportCsv()
     {
         $csvData = "name,governmentId,email,debtAmount,debtDueDate,debtId\n"
