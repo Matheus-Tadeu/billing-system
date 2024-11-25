@@ -2,19 +2,18 @@
 
 namespace App\Core\Domain\Import\Services;
 
-use App\Core\Domain\Import\Services\Interfaces\FileReaderServiceInterface;
+use App\Core\Domain\Import\Services\Interfaces\FileReaderService;
+use Closure;
 use Illuminate\Http\UploadedFile;
 use Exception;
 
-class CsvFileReaderService implements FileReaderServiceInterface
+class CsvFileReaderService implements FileReaderService
 {
-    private $batchSize;
-
-    public function __construct()
-    {
-        $this->batchSize = env('BATCH_SIZE_PROCESS', 50000);
-    }
-
+    /**
+     * @param UploadedFile $file
+     * @return array
+     * @throws Exception
+     */
     public function extractHeader(UploadedFile $file): array
     {
         if (($fileHandle = fopen($file->getRealPath(), 'r')) === false) {
@@ -29,7 +28,13 @@ class CsvFileReaderService implements FileReaderServiceInterface
         return $header;
     }
 
-    public function processInBatches(UploadedFile $file, \Closure $callback): void
+    /**
+     * @param UploadedFile $file
+     * @param Closure $callback
+     * @return void
+     * @throws Exception
+     */
+    public function generateBatches(UploadedFile $file, Closure $callback): void
     {
         if (($fileHandle = fopen($file->getRealPath(), 'r')) === false) {
             throw new Exception('Unable to open file.');
@@ -40,7 +45,7 @@ class CsvFileReaderService implements FileReaderServiceInterface
 
         while (($row = fgetcsv($fileHandle)) !== false) {
             $batch[] = $row;
-            if (count($batch) >= $this->batchSize) {
+            if (count($batch) >= env('CSV_BATCH_SIZE_PROCESS', 50000)) {
                 $callback($batch);
                 $batch = [];
             }

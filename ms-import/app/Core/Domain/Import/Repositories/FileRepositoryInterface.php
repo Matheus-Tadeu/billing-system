@@ -2,7 +2,7 @@
 
 namespace App\Core\Domain\Import\Repositories;
 
-use App\Core\Domain\Import\Entities\Enums\FileStatus;
+use App\Core\Domain\Import\Entities\Enums\Status;
 
 interface FileRepositoryInterface
 {
@@ -12,5 +12,10 @@ interface FileRepositoryInterface
      */
     public function create(string $path):  string;
 
-    public function updateStatus(string $fileId, FileStatus $status): void;
+    /**
+     * @param string $fileId
+     * @param Status $status
+     * @return void
+     */
+    public function updateStatus(string $fileId, Status $status): void;
 }

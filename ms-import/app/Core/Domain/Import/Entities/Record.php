@@ -2,70 +2,64 @@
 
 namespace App\Core\Domain\Import\Entities;
 
-use App\Core\Domain\Import\Entities\Enums\RecordStatus;
-use DateTime;
+use App\Core\Domain\Import\Entities\Enums\Status;
 
 class Record
 {
     /**
      * @var string
      */
-    public string $file_id;
-
+    public string $fileId;
     /**
      * @var string
      */
     public string $name;
-
     /**
-     * @var int
-     * Number document
+     * @var string
      */
-    public int $governmentId;
-
+    public string $governmentId;
     /**
      * @var string
      */
     public string $email;
-
     /**
      * @var string
      */
-    public string $debtAmount;
-
+    public float $debtAmount;
     /**
-     * @var DateTime
-     * Data to be paid
+     * @var \DateTime
      */
-    public DateTime $debtDueDate;
-
+    public \DateTime $debtDueDate;
     /**
      * @var string
      */
     public string $debtID;
+    /**
+     * @var Status
+     */
+    public Status $status;
 
     /**
-     * @var RecordStatus
+     * @param string $fileId
+     * @param string $name
+     * @param string $governmentId
+     * @param string $email
+     * @param float $debtAmount
+     * @param \DateTime $debtDueDate
+     * @param string $debtID
+     * @param Status $status
      */
-    public RecordStatus $status;
-
-    /**
-     * @var string|null
-     */
-    public string|null $error_message;
-
     public function __construct(
-        string $file_id,
+        string $fileId,
         string $name,
-        int $governmentId,
+        string $governmentId,
         string $email,
-        string $debtAmount,
-        DateTime $debtDueDate,
+        float $debtAmount,
+        \DateTime $debtDueDate,
         string $debtID,
-        RecordStatus $status,
-        string|null $error_message = null
+        Status $status
     ) {
-        $this->file_id = $file_id;
+        $this->fileId = $fileId;
         $this->name = $name;
         $this->governmentId = $governmentId;
         $this->email = $email;
@@ -73,20 +67,22 @@ class Record
         $this->debtDueDate = $debtDueDate;
         $this->debtID = $debtID;
         $this->status = $status;
-        $this->error_message = $error_message;
     }
 
+    /**
+     * @return array
+     */
     public function toArray(): array
     {
         return [
-            'fileId' => $this->file_id,
+            'fileId' => $this->fileId,
             'name' => $this->name,
             'governmentId' => $this->governmentId,
             'email' => $this->email,
             'debtAmount' => $this->debtAmount,
             'debtDueDate' => $this->debtDueDate->format('Y-m-d'),
             'debtID' => $this->debtID,
-            'status' => $this->status,
+            'status' => $this->status->value,
         ];
     }
 }

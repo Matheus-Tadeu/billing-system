@@ -37,9 +37,7 @@ return [
 
         'sqlite' => [
             'driver' => 'sqlite',
-            'url' => env('DATABASE_URL'),
             'database' => env('DB_DATABASE', database_path('database.sqlite')),
-            'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],
 
@@ -97,6 +95,9 @@ return [
             'driver' => 'mongodb',
             'dsn' => env('MONGO_URI', ''),
             'database' => env('MONGO_DATABASE', 'myappdb'),
+            'options' => [
+                'database' => env('MONGO_DB_AUTHENTICATION_DATABASE', 'admin'),
+            ],
         ],
     ],
 

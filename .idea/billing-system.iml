@@ -9,7 +9,6 @@
       <sourceFolder url="file://$MODULE_DIR$/ms-import/app" isTestSource="false" packagePrefix="App\" />
       <sourceFolder url="file://$MODULE_DIR$/ms-import/database/factories" isTestSource="false" packagePrefix="Database\Factories\" />
       <sourceFolder url="file://$MODULE_DIR$/ms-import/database/seeders" isTestSource="false" packagePrefix="Database\Seeders\" />
-      <sourceFolder url="file://$MODULE_DIR$/ms-import/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/ms-import/tests" isTestSource="true" packagePrefix="Tests\" />
       <sourceFolder url="file://$MODULE_DIR$/ms-notification/app" isTestSource="false" packagePrefix="App\" />
       <sourceFolder url="file://$MODULE_DIR$/ms-notification/database/factories" isTestSource="false" packagePrefix="Database\Factories\" />
@@ -356,6 +355,20 @@
       <excludeFolder url="file://$MODULE_DIR$/ms-import/vendor/psr/cache" />
       <excludeFolder url="file://$MODULE_DIR$/ms-import/vendor/swagger-api/swagger-ui" />
       <excludeFolder url="file://$MODULE_DIR$/ms-import/vendor/zircote/swagger-php" />
+      <excludeFolder url="file://$MODULE_DIR$/ms-import/vendor/laravel/slack-notification-channel" />
+      <excludeFolder url="file://$MODULE_DIR$/ms-import/vendor/paragonie/constant_time_encoding" />
+      <excludeFolder url="file://$MODULE_DIR$/ms-import/vendor/paragonie/random_compat" />
+      <excludeFolder url="file://$MODULE_DIR$/ms-import/vendor/php-amqplib/php-amqplib" />
+      <excludeFolder url="file://$MODULE_DIR$/ms-import/vendor/phpseclib/phpseclib" />
+      <excludeFolder url="file://$MODULE_DIR$/ms-import/vendor/vladimir-yuldashev/laravel-queue-rabbitmq" />
+      <excludeFolder url="file://$MODULE_DIR$/ms-import/vendor/elastic/transport" />
+      <excludeFolder url="file://$MODULE_DIR$/ms-import/vendor/elasticsearch/elasticsearch" />
+      <excludeFolder url="file://$MODULE_DIR$/ms-import/vendor/open-telemetry/api" />
+      <excludeFolder url="file://$MODULE_DIR$/ms-import/vendor/open-telemetry/context" />
+      <excludeFolder url="file://$MODULE_DIR$/ms-import/vendor/php-http/discovery" />
+      <excludeFolder url="file://$MODULE_DIR$/ms-import/vendor/php-http/httplug" />
+      <excludeFolder url="file://$MODULE_DIR$/ms-import/vendor/php-http/promise" />
+      <excludeFolder url="file://$MODULE_DIR$/ms-import/vendor/symfony/polyfill-php82" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

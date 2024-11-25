@@ -361,6 +361,20 @@
       <path value="$PROJECT_DIR$/ms-import/vendor/doctrine/annotations" />
       <path value="$PROJECT_DIR$/ms-import/vendor/darkaonline/l5-swagger" />
       <path value="$PROJECT_DIR$/ms-import/vendor/zircote/swagger-php" />
+      <path value="$PROJECT_DIR$/ms-import/vendor/laravel/slack-notification-channel" />
+      <path value="$PROJECT_DIR$/ms-import/vendor/paragonie/constant_time_encoding" />
+      <path value="$PROJECT_DIR$/ms-import/vendor/paragonie/random_compat" />
+      <path value="$PROJECT_DIR$/ms-import/vendor/vladimir-yuldashev/laravel-queue-rabbitmq" />
+      <path value="$PROJECT_DIR$/ms-import/vendor/phpseclib/phpseclib" />
+      <path value="$PROJECT_DIR$/ms-import/vendor/php-amqplib/php-amqplib" />
+      <path value="$PROJECT_DIR$/ms-import/vendor/symfony/polyfill-php82" />
+      <path value="$PROJECT_DIR$/ms-import/vendor/elasticsearch/elasticsearch" />
+      <path value="$PROJECT_DIR$/ms-import/vendor/php-http/httplug" />
+      <path value="$PROJECT_DIR$/ms-import/vendor/php-http/discovery" />
+      <path value="$PROJECT_DIR$/ms-import/vendor/php-http/promise" />
+      <path value="$PROJECT_DIR$/ms-import/vendor/elastic/transport" />
+      <path value="$PROJECT_DIR$/ms-import/vendor/open-telemetry/api" />
+      <path value="$PROJECT_DIR$/ms-import/vendor/open-telemetry/context" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1" />

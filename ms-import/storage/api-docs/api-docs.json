@@ -1,8 +1,8 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "ms-import API",
-        "description": "API for importing files",
+        "title": "MS Documentation",
+        "description": "MS documentation for the Import Service",
         "version": "1.0.0"
     },
     "paths": {
@@ -42,11 +42,67 @@
                                             "properties": {
                                                 "file_id": {
                                                     "type": "string",
-                                                    "example": "673f4ce69ff867398807ba04"
+                                                    "example": "6740156e39e019e0bf08f3a2"
                                                 },
-                                                "message": {
-                                                    "type": "string",
-                                                    "example": "Processing in background"
+                                                "success_count": {
+                                                    "type": "integer",
+                                                    "example": 1100000
+                                                },
+                                                "error_count": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "errors": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "record": {
+                                                                "properties": {
+                                                                    "fileId": {
+                                                                        "type": "string",
+                                                                        "example": "6740096f4e3cf3ac16044e5a"
+                                                                    },
+                                                                    "name": {
+                                                                        "type": "string",
+                                                                        "example": "Charles Aguirre"
+                                                                    },
+                                                                    "governmentId": {
+                                                                        "type": "string",
+                                                                        "example": "1507"
+                                                                    },
+                                                                    "email": {
+                                                                        "type": "string",
+                                                                        "example": "westjeremyexample.com"
+                                                                    },
+                                                                    "debtAmount": {
+                                                                        "type": "string",
+                                                                        "example": "4640"
+                                                                    },
+                                                                    "debtDueDate": {
+                                                                        "type": "string",
+                                                                        "example": "2023-04-01"
+                                                                    },
+                                                                    "debtID": {
+                                                                        "type": "string",
+                                                                        "example": "42f374d0-3491-498c-84c7-44038b45fab8"
+                                                                    },
+                                                                    "status": {
+                                                                        "type": "string",
+                                                                        "example": "processing"
+                                                                    }
+                                                                },
+                                                                "type": "object"
+                                                            },
+                                                            "errors": {
+                                                                "type": "array",
+                                                                "items": {
+                                                                    "type": "string",
+                                                                    "example": "Invalid email address."
+                                                                }
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
                                                 }
                                             },
                                             "type": "object"

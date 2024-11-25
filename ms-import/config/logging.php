@@ -129,6 +129,19 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+
+        'elasticsearch' => [
+            'driver' => 'monolog',
+            'handler' => \Elastic\Elasticsearch\ClientBuilder::class,
+            'handler_with' => [
+                'hosts' => ['http://localhost:9200'],
+            ],
+            'formatter' => Monolog\Formatter\ElasticsearchFormatter::class,
+            'formatter_with' => [
+                'index' => 'laravel_logs',
+                'type' => '_doc',
+            ],
+        ],
     ],
 
 ];

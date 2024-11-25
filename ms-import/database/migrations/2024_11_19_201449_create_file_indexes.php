@@ -15,6 +15,8 @@ return new class extends Migration
             $collection->index('path');
             $collection->index('status');;
             $collection->index('created_at');
+            $collection->index('updated_at');
+            $collection->timestamps();
         });
     }
 
@@ -27,6 +29,8 @@ return new class extends Migration
             $collection->dropIndex(['path']);
             $collection->dropIndex(['status']);
             $collection->dropIndex(['created_at']);
+            $collection->dropIndex(['updated_at']);
+            $collection->dropTimestamps();
         });
     }
 };
