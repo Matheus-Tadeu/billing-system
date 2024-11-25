@@ -3,7 +3,7 @@
 namespace App\Core\Domain\Import\Services\Interfaces;
 
 use App\Core\Domain\Import\Repositories\RecordRepositoryInterface;
-use App\Jobs\SaveRecordJob;
+use App\Jobs\ProcessRecordJob;
 
 class BatchProcessorService
 {
@@ -30,7 +30,7 @@ class BatchProcessorService
                 continue;
             }
 
-            SaveRecordJob::dispatch($chunk, $batchNumber, $action);
+            ProcessRecordJob::dispatch($chunk, $batchNumber, $action);
             $batchNumber++;
         }
 

@@ -59,7 +59,7 @@ docker exec -it billing-system_ms-import_1 bash -c "php artisan l5-swagger:gener
 
 ## Como executar o processamento de arquivos CSV
 ```bash
-docker exec -it billing-system_ms-import_1 bash -c "php artisan queue:work --queue=batch_save --daemon --sleep=3"
+docker exec -it billing-system_ms-import_1 bash -c "php artisan queue:work --queue=process_batch_records --daemon --sleep=3"
 ```
 
 ## Como acompanhar os logs do processamento
